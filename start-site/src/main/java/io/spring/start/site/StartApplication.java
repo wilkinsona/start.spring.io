@@ -16,10 +16,15 @@
 
 package io.spring.start.site;
 
+import java.io.File;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.spring.initializr.generator.spring.code.kotlin.KotlinVersionResolver;
 import io.spring.initializr.web.support.InitializrMetadataUpdateStrategy;
 import io.spring.start.site.extension.ProjectDescriptionCustomizerConfiguration;
+import io.spring.start.site.kotlin.ManagedDependenciesKotlinVersionResolver;
 import io.spring.start.site.support.StartInitializrMetadataUpdateStrategy;
+import io.spring.start.site.versions.ManagedDependenciesResolver;
 import io.spring.start.site.web.HomeController;
 
 import org.springframework.boot.SpringApplication;
@@ -64,6 +69,16 @@ public class StartApplication {
 	@Bean
 	public ErrorPageRegistrar notFound() {
 		return (registry) -> registry.addErrorPages(new ErrorPage(HttpStatus.NOT_FOUND, "/404.html"));
+	}
+
+	@Bean
+	public ManagedDependenciesResolver managedDependenciesResolver() {
+		return ManagedDependenciesResolver.withCache(new File("target"));
+	}
+
+	@Bean
+	public KotlinVersionResolver kotlinVersionResolver(ManagedDependenciesResolver managedDependenciesResolver) {
+		return new ManagedDependenciesKotlinVersionResolver(managedDependenciesResolver);
 	}
 
 }
