@@ -18,7 +18,7 @@ package io.spring.start.site.kotlin;
 
 import io.spring.initializr.generator.project.ResolvedProjectDescription;
 import io.spring.initializr.generator.spring.code.kotlin.KotlinVersionResolver;
-import io.spring.start.site.versions.ManagedDependenciesResolver;
+import io.spring.initializr.versionresolver.DependencyManagementVersionResolver;
 
 /**
  * {@link KotlinVersionResolver} that determines the Kotlin version using the dependency
@@ -28,18 +28,17 @@ import io.spring.start.site.versions.ManagedDependenciesResolver;
  */
 public class ManagedDependenciesKotlinVersionResolver implements KotlinVersionResolver {
 
-	private final ManagedDependenciesResolver managedDependenciesResolver;
+	private final DependencyManagementVersionResolver resolver;
 
-	public ManagedDependenciesKotlinVersionResolver(ManagedDependenciesResolver managedDependenciesResolver) {
-		this.managedDependenciesResolver = managedDependenciesResolver;
+	public ManagedDependenciesKotlinVersionResolver(DependencyManagementVersionResolver resolver) {
+		this.resolver = resolver;
 	}
 
 	@Override
 	public String resolveKotlinVersion(ResolvedProjectDescription description) {
 		String version = description.getPlatformVersion().toString();
-		return this.managedDependenciesResolver.resolve("org.springframework.boot", "spring-boot-dependencies", version)
+		return this.resolver.resolve("org.springframework.boot", "spring-boot-dependencies", version)
 				.get("org.jetbrains.kotlin:kotlin-runtime");
-
 	}
 
 }

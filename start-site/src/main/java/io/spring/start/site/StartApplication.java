@@ -20,11 +20,11 @@ import java.io.File;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.spring.initializr.generator.spring.code.kotlin.KotlinVersionResolver;
+import io.spring.initializr.versionresolver.DependencyManagementVersionResolver;
 import io.spring.initializr.web.support.InitializrMetadataUpdateStrategy;
 import io.spring.start.site.extension.ProjectDescriptionCustomizerConfiguration;
 import io.spring.start.site.kotlin.ManagedDependenciesKotlinVersionResolver;
 import io.spring.start.site.support.StartInitializrMetadataUpdateStrategy;
-import io.spring.start.site.versions.ManagedDependenciesResolver;
 import io.spring.start.site.web.HomeController;
 
 import org.springframework.boot.SpringApplication;
@@ -72,13 +72,13 @@ public class StartApplication {
 	}
 
 	@Bean
-	public ManagedDependenciesResolver managedDependenciesResolver() {
-		return ManagedDependenciesResolver.withCache(new File("target"));
+	public DependencyManagementVersionResolver dependencyManagementVersionResolver() {
+		return DependencyManagementVersionResolver.withCacheLocation(new File("target"));
 	}
 
 	@Bean
-	public KotlinVersionResolver kotlinVersionResolver(ManagedDependenciesResolver managedDependenciesResolver) {
-		return new ManagedDependenciesKotlinVersionResolver(managedDependenciesResolver);
+	public KotlinVersionResolver kotlinVersionResolver(DependencyManagementVersionResolver versionResolver) {
+		return new ManagedDependenciesKotlinVersionResolver(versionResolver);
 	}
 
 }
